@@ -3,8 +3,16 @@ import 'dart:io';
 
 import 'package:flutter/services.dart';
 
+
+enum AppState{
+  inactive,
+  active,
+  background
+}
+
 /*
-* @type {object}
+*
+*
 * // Android Only
 * @property {number} [buildId] - 通知样式：1 为基础样式，2 为自定义样式（需先调用 `setStyleCustom` 设置自定义样式）
 * @property {number} [id] - 通知 id, 可用于取消通知
@@ -12,6 +20,8 @@ import 'package:flutter/services.dart';
 * @property {string} [content] - 通知内容
 * @property {object} [extra] - extra 字段
 * @property {number} [fireTime] - 通知触发时间（毫秒）
+*
+*
 * // iOS Only
 * @property {number} [badge] - 本地推送触发后应用角标值
 * // iOS Only
@@ -20,17 +30,28 @@ import 'package:flutter/services.dart';
 * @property {string} [subtitle] - 子标题
 */
 class JPushNotification{
+  JPushNotification({
+    this.buildId,
+    this.id,
+    this.title,
+    this.badge,
+    this.content,
+    this.extra,
+    this.fireTime,
+    this.sound,
+    this.appState
+});
 
-  /**
-   * 通知样式：1 为基础样式，2 为自定义样式（需先调用 `setStyleCustom` 设置自定义样式
-   * // Android Only
-   */
+
+  final AppState appState;
+
+  /// 通知样式：1 为基础样式，2 为自定义样式（需先调用 `setStyleCustom` 设置自定义样式
+  /// Android Only
   final int buildId;
 
-  /**
-   *  通知 id, 可用于取消通知
-   */
+  ///  通知 id, 可用于取消通知
   final int id;
+
   //通知标题
   final String title;
 
@@ -41,12 +62,14 @@ class JPushNotification{
   final dynamic extra;
 
   //通知触发时间(毫秒)
-  final double fireTime;
+  final DateTime fireTime;
 
   //本地推送触发后应用角标值
   //iOS Only
   final int badge;
 
+  /// ios Only sound
+  final String sound;
 
 
 }
@@ -64,7 +87,7 @@ class JPushResult{
   JPushResult({
     this.code:null,
     this.raw
-});
+  });
 
   bool isSuccess(){
     return code == 0;
@@ -72,18 +95,81 @@ class JPushResult{
 }
 
 
-class Jpush {
-  static const MethodChannel _channel = const MethodChannel('jpush');
+class FlutterJpush {
+  static const MethodChannel _channel = const MethodChannel('flutter_jpush');
 
+  static bool isConnected = false;
+  static bool isLogin = false;
+  static String registrationID;
 
-  static void startup(){
+  static Future<dynamic> startup() async{
     _channel.setMethodCallHandler(_handler);
+    return await _channel.invokeMethod("startup");
   }
 
   static Future<dynamic> _handler(MethodCall call){
+    print("handle mehtod call ${call.method} ${call.arguments}");
+    String method = call.method;
+    switch(method){
+      case 'connectionChange':
+        {
+          isConnected = call.arguments;
+          _connectionChangeListener.add(isConnected);
+        }
+        break;
+      case 'networkDidLogin':
+        {
+          isLogin =  call.arguments;
+          getRegistrationID().then( (String result)=> _networkDidLoginListenerListener.add(result) );
+        }
+        break;
+      case 'receivePushMsg':
+        {
 
+
+
+
+        }
+        break;
+      case 'receiveNotification':
+        {
+          dynamic dic = call.arguments;
+          if(Platform.isIOS){
+            dynamic aps = dic['aps'];
+            String appState = dic['appState'];
+            AppState state;
+            switch(appState){
+              case 'inactive':
+                state = AppState.inactive;
+                break;
+              case 'active':
+                state = AppState.active;
+                break;
+              case 'background':
+                state = AppState.background;
+                break;
+            }
+            JPushNotification notification = new JPushNotification(
+                title:"",
+                badge: aps['badge'] as int,
+                content: aps['alert'],
+                sound:aps['sound'],
+                extra: dic['extra'],
+                appState: state,
+                id: dic['_j_msgid'],
+                fireTime:new DateTime.now()
+            );
+            _recvNotificationListener.add(  notification );
+          }else{
+
+          }
+        }
+        break;
+    }
     return new Future.value(null);
   }
+
+
 
 
   /**
@@ -93,8 +179,18 @@ class Jpush {
     if (Platform.isAndroid) {
       await _channel.invokeMethod("initPush");
     } else {
-      Jpush.setupPush();
+      FlutterJpush.setupPush();
     }
+  }
+
+
+  /**
+   * iOS Only
+   * 初始化 Jpush SDK 代码,
+   * NOTE: 如果已经在原生 SDK 中添加初始化代码则无需再调用 （通过脚本配置，会自动在原生中添加初始化，无需额外调用）
+   */
+  static Future<void> setupPush () async{
+    await _channel.invokeMethod("setupPush");
   }
   /**
    * 停止推送，调用该方法后将不再受到推送
@@ -110,7 +206,7 @@ class Jpush {
     if (Platform.isAndroid) {
       await _channel.invokeMethod("resumePush");
     } else {
-      Jpush.setupPush();
+      FlutterJpush.setupPush();
     }
   }
 
@@ -144,7 +240,7 @@ class Jpush {
     if (Platform.isAndroid) {
       await _channel.invokeMethod("clearAllNotifications");
     } else {
-      await Jpush.setBadge(0);
+      await FlutterJpush.setBadge(0);
     }
   }
 
@@ -420,7 +516,7 @@ class Jpush {
   static StreamController<Map> _recvCustomMsgController = new StreamController.broadcast();
   static StreamController<String> _openNotificationLaunchAppListener = new StreamController.broadcast();
   static StreamController<String> _networkDidLoginListenerListener = new StreamController.broadcast();
-  static StreamController<dynamic> _recvNotificationListener = new StreamController.broadcast();
+  static StreamController<JPushNotification> _recvNotificationListener = new StreamController.broadcast();
   static StreamController<dynamic> _recvOpenNotificationListener = new StreamController.broadcast();
   static StreamController<String> _getRegistrationIdListener = new StreamController.broadcast();
   static StreamController<bool> _connectionChangeListener = new StreamController.broadcast();
@@ -490,6 +586,7 @@ class Jpush {
     listeners[onData] = _connectionChangeListener.stream.listen(onData);
   }
 
+
   /**
    * 监听：连接状态变更
    * @param {Function} cb = (Boolean) => { }
@@ -521,14 +618,6 @@ class Jpush {
     return await _channel.invokeMethod("getRegistrationID");
   }
 
-  /**
-   * iOS Only
-   * 初始化 Jpush SDK 代码,
-   * NOTE: 如果已经在原生 SDK 中添加初始化代码则无需再调用 （通过脚本配置，会自动在原生中添加初始化，无需额外调用）
-   */
-  static Future<void> setupPush () async{
-    await _channel.invokeMethod("setupPush");
-  }
 
   /**
    * iOS Only

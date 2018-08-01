@@ -1,4 +1,4 @@
-group 'com.jzoom.jpush'
+group 'com.example.flutterjpush'
 version '1.0-SNAPSHOT'
 
 buildscript {
@@ -32,8 +32,3 @@ android {
         disable 'InvalidPackage'
     }
 }
-
-dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
-}
-

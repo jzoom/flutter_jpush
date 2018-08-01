@@ -2,11 +2,11 @@
 # To learn more about a Podspec see http://guides.cocoapods.org/syntax/podspec.html
 #
 Pod::Spec.new do |s|
-  s.name             = 'jpush'
+  s.name             = 'flutter_jpush'
   s.version          = '0.0.1'
-  s.summary          = 'A Flutter plugin to use jpush.'
+  s.summary          = 'A new flutter plugin project.'
   s.description      = <<-DESC
-A Flutter plugin to use jpush.
+A new flutter plugin project.
                        DESC
   s.homepage         = 'http://example.com'
   s.license          = { :file => '../LICENSE' }
@@ -15,12 +15,7 @@ A Flutter plugin to use jpush.
   s.source_files = 'Classes/**/*'
   s.public_header_files = 'Classes/**/*.h'
   s.dependency 'Flutter'
-  s.frameworks      = 'UIKit','CFNetwork','CoreFoundation','CoreTelephony','SystemConfiguration','CoreGraphics','Foundation','Security'
-  s.weak_frameworks = 'UserNotifications'
-  s.libraries       = 'z','resolv'
-  s.vendored_libraries = "lib/*.a"
-
-
+  s.dependency 'JPush'
   
   s.ios.deployment_target = '8.0'
 end

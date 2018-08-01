@@ -33,7 +33,7 @@
 {
   self = [super init];
   if (self) {
-    self.isReactDidLoad = NO;
+    self.isFlutterDidLoad = NO;
     _notificationQueue = [NSMutableArray new];
     self.getRidCallbackArr = [NSMutableArray new];
   }

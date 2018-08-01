@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.jzoom.jpushexample">
+    package="com.example.flutterjpushexample">
 
     <!-- The INTERNET permission is required for development. Specifically,
          flutter needs it to communicate with the running application
@@ -14,7 +14,7 @@
          FlutterApplication and put your custom class here. -->
     <application
         android:name="io.flutter.app.FlutterApplication"
-        android:label="jpush_example"
+        android:label="flutter_jpush_example"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"
@@ -34,26 +34,6 @@
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
-
-
-
-
         </activity>
-        <meta-data
-            android:name="JPUSH_APPKEY"
-            android:value="${JPUSH_APPKEY}" />
-        <meta-data
-            android:name="JPUSH_CHANNEL"
-            android:value="${APP_CHANNEL}" />
-
-
-        <!-- User defined.  For test only  用户自定义接收消息器,3.0.7开始支持,目前新tag/alias接口设置结果会在该广播接收器对应的方法中回调-->
-        <receiver android:name="com.jzoom.jpush.JpushPlugin$MyJPushMessageReceiver">
-            <intent-filter>
-                <action android:name="cn.jpush.android.intent.RECEIVE_MESSAGE" />
-                <category android:name="${applicationId}" />
-            </intent-filter>
-        </receiver>
-
     </application>
 </manifest>

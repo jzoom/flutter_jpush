@@ -15,7 +15,7 @@
 
 @interface JPushActionQueue : NSObject
 
-@property BOOL isReactDidLoad;
+@property BOOL isFlutterDidLoad;
 @property NSDictionary* openedRemoteNotification;
 @property NSDictionary* openedLocalNotification;
 @property(strong,nonatomic)NSMutableArray<FlutterResult>* getRidCallbackArr;

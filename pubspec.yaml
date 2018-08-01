@@ -1,5 +1,5 @@
-name: jpush
-description: A Flutter plugin to use jpush.
+name: flutter_jpush
+description: A new flutter plugin project.
 version: 0.0.1
 author:
 homepage:
@@ -14,8 +14,8 @@ dependencies:
 # The following section is specific to Flutter.
 flutter:
   plugin:
-    androidPackage: com.jzoom.jpush
-    pluginClass: JpushPlugin
+    androidPackage: com.example.flutterjpush
+    pluginClass: FlutterJpushPlugin
 
   # To add assets to your plugin package, add an assets section, like this:
   # assets:
