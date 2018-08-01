@@ -1,8 +1,31 @@
 # flutter_jpush_example
 
-Demonstrates how to use the flutter_jpush plugin.
+Flutter 版本 jpush（极光推送），目前正在开发，预计本周开发完毕，有需求请提issues
+
+## ROADMAP
+
+* [ ] ios
+* [ ] android
+* [ ] 集成notification
+* [ ] 集成message
+* [ ] 集成alias
+* [ ] 集成tags
 
 ## Getting Started
 
-For help getting started with Flutter, view our online
-[documentation](https://flutter.io/).
+### 准备工作
+
+#### 申请key
+
+#### ios 证书申请
+
+### ios 集成
+
+### android 集成
+
+
+
+
+
+
+
