@@ -10,6 +10,8 @@ Flutter 版本 jpush（极光推送），目前正在开发，预计本周开发
 * [ ] 集成message
 * [ ] 集成alias
 * [ ] 集成tags
+* [ ] 后台接口放出服务
+* [ ] 可以运行的例子，用户可自行推送
 
 ## Getting Started
 
