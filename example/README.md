@@ -4,27 +4,13 @@ Flutter 版本 jpush（极光推送），目前正在开发，预计本周开发
 
 ## ROADMAP
 
-* [ ] ios
-* [ ] android
-* [ ] 集成notification
-* [ ] 集成message
-* [ ] 集成alias
-* [ ] 集成tags
-* [ ] 后台接口放出服务
-* [ ] 可以运行的例子，用户可自行推送
+* [ ] ios例子
+* [ ] android例子
+* [ ] 推送给本设备
+* [ ] 推送给所有设备
+* [ ] 推送给指定 device/tags/alias
 
 ## Getting Started
-
-### 准备工作
-
-#### 申请key
-
-#### ios 证书申请
-
-### ios 集成
-
-### android 集成
-
 
 
 
